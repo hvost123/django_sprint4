@@ -29,7 +29,7 @@ urlpatterns = [
         name="edit_post",
     ),
     path(
-        "profile/<slag:pk>/edit",
+        "profile/<slug:pk>/edit",
         views.UserUpdateView.as_view(),
         name="edit_profile",
     ),
