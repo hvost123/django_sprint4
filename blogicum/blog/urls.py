@@ -1,26 +1,55 @@
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import include, path, reverse_lazy
-from django.views.generic.edit import CreateView
+from django.urls import path
 
-handler404 = "pages.views.page_not_found"
-handler500 = "pages.views.server_error"
+from . import views
 
+app_name = "blog"
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("", include("blog.urls", namespace="blog")),
-    path("pages/", include("pages.urls", namespace="pages")),
-    path("auth/", include("django.contrib.auth.urls")),
     path(
-        "auth/registration/",
-        CreateView.as_view(
-            template_name="registration/registration_form.html",
-            form_class=UserCreationForm,
-            success_url=reverse_lazy("blog:index"),
-        ),
-        name="registration",
+        "",
+        views.index,name="index"),
+    path(
+        "posts/<int:id>/",
+         views.post_detail,
+         name="post_detail"),
+    path(
+        "category/<slug:category_slug>/",
+        views.category_posts,
+        name="category_posts",
     ),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    path("profile/<slug:username_slug>/", views.get_profile, name="profile"),
+    path(
+        "posts/create/",
+        views.PostCreateView.as_view(),
+        name="create_post"),
+    path(
+        "posts/<int:pk>/edit/",
+        views.PostUpdateView.as_view(),
+        name="edit_post",
+    ),
+    path(
+        "profile/<user_id>/edit",
+        views.UserUpdateView.as_view(),
+        name="edit_profile",
+    ),
+    path(
+        "posts/<int:pk>/comment/",
+        views.CommentCreateView.as_view(),
+        name="add_comment",
+    ),
+    path(
+        "posts/<int:post_id>/edit_comment/<int:pk>/",
+        views.CommentUpdateView.as_view(),
+        name="edit_comment",
+    ),
+    path(
+        "posts/<int:pk>/delete/",
+        views.PostDeleteView.as_view(),
+        name="delete_post",
+    ),
+    path(
+        "posts/<int:post_id>/delete_comment/<int:pk>/",
+        views.CommentDeleteView.as_view(),
+        name="delete_comment",
+    ),
+]
