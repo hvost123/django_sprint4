@@ -29,7 +29,7 @@ urlpatterns = [
         name="edit_post",
     ),
     path(
-        "profile/<user_id>/edit",
+        "profile/<user_id:pk>/edit",
         views.UserUpdateView.as_view(),
         name="edit_profile",
     ),
