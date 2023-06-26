@@ -186,7 +186,6 @@ def delete_comment(request, c_id, p_id):
     if instance.author != request.user:
         return redirect('login')
     context = {'comment': instance}
-    
     if request.method == 'POST':
         instance.delete()
         return redirect('blog:post_detail', pk=p_id)
