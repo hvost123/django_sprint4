@@ -108,14 +108,12 @@ class DispatchMixin:
         if instance.author != request.user:
             return redirect('blog:post_detail', pk=kwargs['pk'])
         return super().dispatch(request, *args, **kwargs)
-    
 
 
 class PostUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
-
 
     def get_success_url(self):
         url = reverse('blog:post_detail', args=[str(self.post_id)])
@@ -126,8 +124,6 @@ class PostDeleteView(LoginRequiredMixin, DispatchMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('blog:index')
     template_name = 'blog/create.html'
-
-
 
 
 class PostDetailView(DetailView):

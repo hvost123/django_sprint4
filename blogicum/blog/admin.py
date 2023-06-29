@@ -48,4 +48,4 @@ class CommentAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(Location) 
+admin.site.register(Location)
