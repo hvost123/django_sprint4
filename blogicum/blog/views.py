@@ -104,6 +104,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class DispatchMixin:
     def dispatch(self, request, *args, **kwargs):
+        self.post_id = kwargs['pk']
         instance = get_object_or_404(Post, pk=kwargs['pk'])
         if instance.author != request.user:
             return redirect('blog:post_detail', pk=kwargs['pk'])
