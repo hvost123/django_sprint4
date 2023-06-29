@@ -168,12 +168,13 @@ def add_comment(request, pk):
 def edit_comment(request, comment_id, post_id):
     '''Изменение комментария'''
     instance = get_object_or_404(Comment, id=comment_id, post_id=post_id)
+    form = CommentForm(request.POST or None, instance=instance)
     if instance.author != request.user:
-        form = CommentForm(request.POST or None, instance=instance)
-        context = {
-            'form': form,
-            'comment': instance
-        }
+        return redirect('login')
+    context = {
+        'form': form,
+        'comment': instance
+    }
 
     if form.is_valid():
         form.save()
@@ -186,7 +187,8 @@ def delete_comment(request, comment_id, post_id):
     '''Удаление комментария'''
     instance = get_object_or_404(Comment, id=comment_id, post_id=post_id)
     if instance.author != request.user:
-        context = {'comment': instance}
+        return redirect('login')
+    context = {'comment': instance}
     if request.method == 'POST':
         instance.delete()
         return redirect('blog:post_detail', pk=post_id)
