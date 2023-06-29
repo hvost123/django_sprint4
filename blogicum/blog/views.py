@@ -56,13 +56,15 @@ def info_profile(request, name):
 class PostListView(ListView):
     template_name = 'blog/index.html'
     model = Post
-    queryset = Post.objects.filter(
-        is_published=True,
-        pub_date__lte=timezone.now(),
-        category__is_published=True,
-    ).select_related('author', 'category', 'location')
     ordering = '-pub_date'
     paginate_by = 10
+
+    def get_queryset(self):
+        return Post.objects.filter(
+            is_published=True,
+            pub_date__lte=timezone.now(),
+            category__is_published=True,
+        ).select_related('author', 'category', 'location')
 
 
 def category_posts(request, category_slug):
