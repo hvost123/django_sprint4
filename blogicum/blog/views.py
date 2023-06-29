@@ -170,7 +170,7 @@ def edit_comment(request, comment_id, post_id):
     instance = get_object_or_404(Comment, id=comment_id, post_id=post_id)
     form = CommentForm(request.POST or None, instance=instance)
     if instance.author != request.user:
-        return redirect('blog:post_detail')
+        return redirect('blog:post_detail', pk=post_id)
     context = {
         'form': form,
         'comment': instance
@@ -187,7 +187,7 @@ def delete_comment(request, comment_id, post_id):
     '''Удаление комментария'''
     instance = get_object_or_404(Comment, id=comment_id, post_id=post_id)
     if instance.author != request.user:
-        return redirect('blog:post_detail')
+        return redirect('blog:post_detail', pk=post_id)
     context = {'comment': instance}
     if request.method == 'POST':
         instance.delete()
