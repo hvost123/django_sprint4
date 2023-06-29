@@ -1,5 +1,7 @@
-from blog import views
 from django.urls import path
+
+from blog import views
+
 
 app_name = 'blog'
 
@@ -21,10 +23,10 @@ urlpatterns = [
          views.category_posts,
          name='category_posts'),
     path('posts/<int:pk>/comment/', views.add_comment, name='add_comment'),
-    path('posts/<int:p_id>/edit_comment/<int:c_id>/',
+    path('posts/<int:post_id>/edit_comment/<int:comment_id>/',
          views.edit_comment,
          name='edit_comment'),
-    path('posts/<int:p_id>/delete_comment/<int:c_id>',
+    path('posts/<int:post_id>/delete_comment/<int:comment_id>',
          views.delete_comment,
          name='delete_comment'),
     path('profile/<name>/', views.info_profile, name='profile'),

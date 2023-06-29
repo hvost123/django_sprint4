@@ -1,6 +1,6 @@
-from django.contrib import admin
-
 from blog.models import Category, Location, Post, Comment
+
+from django.contrib import admin
 
 
 admin.site.empty_value_display = 'Не задано'
@@ -11,12 +11,14 @@ class PostInline(admin.StackedInline):
     extra = 0
 
 
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = (
         PostInline,
     )
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
         'title',
@@ -37,6 +39,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display_links = ('title',)
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = (
         'text',
@@ -45,7 +48,4 @@ class CommentAdmin(admin.ModelAdmin):
     )
 
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Location)
-admin.site.register(Comment, CommentAdmin)
+admin.site.register(Location) 
