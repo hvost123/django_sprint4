@@ -27,7 +27,7 @@ def edit_profile(request, name):
     user = get_object_or_404(User, username=name)
     if user.username != request.user.username:
         return redirect('login')
-    form = ProfileForm(request.POST or None, user=user)
+    form = ProfileForm(request.POST or None, instance=user)
     context = {'form': form}
     if form.is_valid():
         form.save()
