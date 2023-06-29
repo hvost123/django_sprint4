@@ -173,8 +173,8 @@ def edit_comment(request, comment_id, post_id):
         context = {
             'form': form,
             'comment': instance
-    }
-        
+        }
+
     if form.is_valid():
         form.save()
         return redirect('blog:post_detail', pk=post_id)
