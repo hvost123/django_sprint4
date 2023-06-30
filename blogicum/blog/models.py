@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
+from blog.constants import OUTPUT_SIMS
 
 User = get_user_model()
 
@@ -28,8 +29,10 @@ class Category(PublishedModel):
         max_length=64,
         unique=True,
         verbose_name='Идентификатор',
-        help_text='Идентификатор страницы для URL; '
-        'разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        help_text=(
+            'Идентификатор страницы для URL; '
+            'разрешены символы латиницы, цифры, дефис и подчёркивание.'
+        )
     )
 
     class Meta:
@@ -37,7 +40,7 @@ class Category(PublishedModel):
         verbose_name_plural = 'Категории'
 
     def __str__(self):
-        return self.title[:30]
+        return self.title[:OUTPUT_SIMS]
 
 
 class Location(PublishedModel):
@@ -48,7 +51,7 @@ class Location(PublishedModel):
         verbose_name_plural = 'Местоположения'
 
     def __str__(self):
-        return self.name[:30]
+        return self.name[:OUTPUT_SIMS]
 
 
 class Post(PublishedModel):
@@ -57,8 +60,10 @@ class Post(PublishedModel):
     pub_date = models.DateTimeField(
         default=timezone.now,
         verbose_name='Дата и время публикации',
-        help_text='Если установить дату и время в будущем — можно '
-        'делать отложенные публикации.'
+        help_text=(
+            'Если установить дату и время в будущем — можно '
+            'делать отложенные публикации.'
+        )
     )
     author = models.ForeignKey(
         User,
@@ -87,7 +92,7 @@ class Post(PublishedModel):
         default_related_name = 'posts'
 
     def __str__(self):
-        return self.title[:30]
+        return self.title[:OUTPUT_SIMS]
 
 
 class Comment(models.Model):
@@ -96,7 +101,7 @@ class Comment(models.Model):
         Post,
         verbose_name='Заголовок поста',
         on_delete=models.CASCADE,
-        related_name='comment',
+        related_name='comments',
     )
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
@@ -111,4 +116,4 @@ class Comment(models.Model):
         ordering = ('created_at',)
 
     def __str__(self):
-        return self.text[:30]
+        return self.text[:OUTPUT_SIMS]

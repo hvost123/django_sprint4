@@ -3,15 +3,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import (
-    CreateView, DeleteView, DetailView, ListView, UpdateView
-)
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
 
-from blog.models import Post, Category, Comment
-from blog.forms import PostForm, CommentForm, ProfileForm
+from blog.forms import CommentForm, PostForm, ProfileForm
+from blog.models import Category, Comment, Post
 
 
 class ProfileLoginView(LoginView):
@@ -79,7 +78,7 @@ def category_posts(request, category_slug):
     post_list = category.posts.filter(
         pub_date__lte=current_time,
         is_published=True,
-    )
+    ).select_related('category')
     paginator = Paginator(post_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -114,7 +113,7 @@ class DispatchMixin:
         '''Отправляет изменения/удаления поста'''
         self.post_id = kwargs['pk']
         if self.get_object().author != request.user:
-            return redirect('blog:post_detail', pk=kwargs['pk'])
+            return redirect('blog:post_detail', pk=self.post_id)
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -125,7 +124,7 @@ class PostUpdateView(LoginRequiredMixin, DispatchMixin, UpdateView):
 
     def get_success_url(self):
         '''Получение адреса.'''
-        url = reverse('blog:post_detail', args=[str(self.post_id)])
+        url = reverse('blog:post_detail', args=(self.post_id,))
         return url
 
 
