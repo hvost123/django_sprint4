@@ -139,7 +139,6 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
 
-
     def get_object(self):
         queryset = Post.objects.filter(
             Q(is_published=True) | Q(author=self.request.user)
@@ -148,7 +147,6 @@ class PostDetailView(DetailView):
             queryset,
             pk=self.kwargs.get('pk'),
         )
-
 
     def get_context_data(self, **kwargs):
         '''Получение данных контекста'''
