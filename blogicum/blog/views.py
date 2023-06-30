@@ -8,6 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
+from django.db.models import Q
 
 from blog.forms import CommentForm, PostForm, ProfileForm
 from blog.models import Category, Comment, Post
@@ -67,7 +68,7 @@ class PostListView(ListView):
 
 
 def category_posts(request, category_slug):
-    ''' Создание котегорий постов'''
+    '''Отображение по котегории постов'''
     templates = 'blog/category.html'
     current_time = timezone.now()
     category = get_object_or_404(
@@ -138,8 +139,19 @@ class PostDetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
 
+
+    def get_object(self):
+        queryset = Post.objects.filter(
+            Q(is_published=True) | Q(author=self.request.user)
+        )
+        return get_object_or_404(
+            queryset,
+            pk=self.kwargs.get('pk'),
+        )
+
+
     def get_context_data(self, **kwargs):
-        '''Получение данных конекста'''
+        '''Получение данных контекста'''
         context = super().get_context_data(**kwargs)
         context['form'] = CommentForm()
         context['comments'] = (
